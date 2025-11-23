@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EVOKE-STUDIOS</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Playfair+Display:ital,wght@1,400&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-peach: #f9e2df;
+      --color-blush: #e5b0a7;
+      --color-tan: #8C7860;
+      --color-text: #2D3748;
+      --heart-color: rgba(245,150,190,0.12);
+      --heart-stroke: rgba(245,150,190,0.28);
+    }
+
+    /* ==== NAV LINK HOVER LINE EFFECT ==== */
+.nav-link {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 2px;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0%;
+  height: 1.2px;
+  background-color: blue;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+
+    body { font-family: 'Inter', sans-serif; color:var(--color-text); background: #fff; position: relative; overflow-x: hidden; }
+    .hero-title { font-family: 'Playfair Display', serif; }
+    .text-script { font-family: 'Dancing Script', cursive; }
+    .tag-pill { background: rgba(255,255,255,0.85); backdrop-filter: blur(6px); }
+    /* small animation for welcome */
+    .toast-slide { transform: translateY(12px); opacity: 0; transition: transform .4s ease, opacity .4s ease; }
+    .toast-slide.show { transform: translateY(0); opacity: 1; }
+    /* slider mask */
+    .slider-track { transition: transform .45s cubic-bezier(.22,.9,.35,1); will-change: transform; }
+    /* modal backdrop */
+    .modal-backdrop { background: rgba(0,0,0,0.5); }
+
+    /* === Heart background layer === */
+    #heart-bg {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 0; /* behind everything */
+      overflow: hidden;
+    }
+
+    
+
+    
+
+
+    .wave-container { line-height: 0; }
+        .wave-container svg { display: block; width: 100%; }
+        .service-card { background-color: #ffffff; border: 1px solid #f0f0f0; }
+        #image-modal { opacity: 0; pointer-events: none; }
+        #image-modal:not(.hidden) { opacity: 1; pointer-events: auto; }
+
+
+    .heart {
+      position: absolute;
+      fill: var(--heart-color);
+      stroke: var(--heart-stroke);
+      stroke-width: 1;
+      transform-origin: center;
+      opacity: 0.95;
+      filter: blur(0.2px);
+    }
+
+
+    @media (max-width: 768px) {
+  .feat-prev, .feat-next {
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 6px;
+    top: 45%;
+  }
+}
+
+
+    .carousel-track { 
+            display: flex;
+            transition: transform var(--slide-duration) ease-in-out;
+            width: 300%; /* 3 slides * 100% width each */
+        }
+
+        /* Individual slide styling */
+        .slide {
+            flex-shrink: 0;
+            width: calc(100% / 3); /* Each slide takes up one-third of the track width */
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Text overlay for contrast */
+        .overlay-content {
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 50%);
+        }
+
+        /* Specific styling for the secondary button (VIEW COLLECTION style) */
+        .btn-secondary {
+            border: 1px solid white;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .btn-secondary:hover {
+            background-color: white;
+            color: black;
+        }
+
+    /* positions & sizes */
+    .heart.h1 { width: 220px; left: 6%; top: 10%; transform: rotate(-12deg) scale(1); opacity: .18; }
+    .heart.h2 { width: 140px; right: 6%; top: 18%; transform: rotate(6deg) scale(.9); opacity: .12; }
+    .heart.h3 { width: 180px; left: 12%; bottom: 18%; transform: rotate(-6deg) scale(.95); opacity: .10; }
+    .heart.h4 { width: 120px; right: 10%; bottom: 10%; transform: rotate(14deg) scale(.85); opacity: .08; }
+    .heart.h5 { width: 90px; left: 48%; top: 42%; transform: rotate(0deg) scale(.65); opacity: .07; }
+    /* subtle pulsing on larger screens */
+    @media (min-width: 768px) {
+      .heart { transition: transform 6s ease-in-out, opacity 6s ease-in-out; }
+      .heart.pulse { animation: heartPulse 10s ease-in-out infinite; }
+      @keyframes heartPulse {
+        0% { transform: scale(0.98); opacity: .12; }
+        50% { transform: scale(1.03); opacity: .18; }
+        100% { transform: scale(0.98); opacity: .12; }
+      }
+    }
+    /* ensure page content sits above */
+    main, header, footer, section { position: relative; z-index: 10; }
+
+    /* small tweak to hero text color to remain visible on pale backgrounds */
+    .hero-slide-text { color: #2d3748; }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- Heart background SVG layer (fixed across page) -->
+  <div id="heart-bg" aria-hidden="true">
+    <!-- large soft heart -->
+    <svg class="heart h1 pulse" viewBox="0 0 32 29" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <path d="M23.6 1.6c-2.4 0-4.1 1.6-5.6 3.2-1.5-1.6-3.2-3.2-5.6-3.2C7.2 1.6 4 4.8 4 8.8c0 6.1 11.6 13.6 12 13.9.3-.2 12-7.8 12-13.9 0-4-3.2-7.2-6.4-7.2z"/>
+    </svg>
+
+    <!-- medium hearts -->
+    <svg class="heart h2" viewBox="0 0 32 29" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <path d="M23.6 1.6c-2.4 0-4.1 1.6-5.6 3.2-1.5-1.6-3.2-3.2-5.6-3.2C7.2 1.6 4 4.8 4 8.8c0 6.1 11.6 13.6 12 13.9.3-.2 12-7.8 12-13.9 0-4-3.2-7.2-6.4-7.2z"/>
+    </svg>
+
+    <svg class="heart h3 pulse" viewBox="0 0 32 29" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <path d="M23.6 1.6c-2.4 0-4.1 1.6-5.6 3.2-1.5-1.6-3.2-3.2-5.6-3.2C7.2 1.6 4 4.8 4 8.8c0 6.1 11.6 13.6 12 13.9.3-.2 12-7.8 12-13.9 0-4-3.2-7.2-6.4-7.2z"/>
+    </svg>
+
+    <svg class="heart h4" viewBox="0 0 32 29" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <path d="M23.6 1.6c-2.4 0-4.1 1.6-5.6 3.2-1.5-1.6-3.2-3.2-5.6-3.2C7.2 1.6 4 4.8 4 8.8c0 6.1 11.6 13.6 12 13.9.3-.2 12-7.8 12-13.9 0-4-3.2-7.2-6.4-7.2z"/>
+    </svg>
+
+    <svg class="heart h5" viewBox="0 0 32 29" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <path d="M23.6 1.6c-2.4 0-4.1 1.6-5.6 3.2-1.5-1.6-3.2-3.2-5.6-3.2C7.2 1.6 4 4.8 4 8.8c0 6.1 11.6 13.6 12 13.9.3-.2 12-7.8 12-13.9 0-4-3.2-7.2-6.4-7.2z"/>
+    </svg>
+  </div>
+ 
+    <header>
+
+    <!-- Navigation -->
+    <nav class="container mx-auto px-4 py-6 flex items-center justify-between relative z-10">
+        <div class="hidden md:flex md:items-center space-x-6">
+            <a href="index.html" class="nav-link text-gray-700 hover:text-indigo-600 transition-colors">Home</a>
+            <a href="products.html" class="nav-link text-gray-700 hover:text-indigo-600 transition-colors">Our Products</a>
+        </div>
+
+        <div class="flex items-center justify-center relative w-full md:w-auto">
+            <div class="text-center">
+                <p class="text-xs tracking-widest uppercase text-gray-500">Curated Gifts & Treasures</p>
+                <h1 class="hero-title text-2xl font-bold tracking-tight text-gray-900">Evoke Studio</h1>
+            </div>
+
+            <!-- MOBILE TOGGLE BUTTON -->
+            <button id="menu-toggle" class="md:hidden absolute right-0 p-2 text-gray-700 hover:text-indigo-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200">
+                <svg id="icon-menu" class="w-6 h-6 block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+                <svg id="icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="hidden md:flex md:items-center space-x-4 text-lg text-gray-600">
+            <i class="fa-brands fa-pinterest hover:text-indigo-600 transition-colors cursor-pointer"></i>
+            <a href="/index.html#contact">
+                <button class="bg-transparent border border-gray-400 text-sm py-1 px-4 rounded-full hover:bg-gray-100 transition-colors text-gray-700">
+                    Contact Us
+                </button>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden hidden flex-col px-4 pb-4 space-y-2">
+        <a href="index.html" class="nav-link py-2 text-gray-700 hover:text-indigo-600 transition-colors block">Home</a>
+        <a href="products.html" class="nav-link py-2 text-gray-700 hover:text-indigo-600 transition-colors block">Our Products</a>
+        <div class="flex space-x-4 pt-2">
+            <i class="fa-brands fa-instagram hover:text-indigo-600 transition-colors cursor-pointer"></i>
+            <i class="fa-brands fa-facebook hover:text-indigo-600 transition-colors cursor-pointer"></i>
+            <i class="fa-brands fa-pinterest hover:text-indigo-600 transition-colors cursor-pointer"></i>
+        </div>
+        <a href="/index.html#contact">
+            <button class="w-full bg-transparent border border-gray-400 text-sm py-2 rounded-full hover:bg-gray-100 transition-colors text-gray-700 mt-2">
+                Contact Us
+            </button>
+        </a>
+    </div>
+
+    <hr class="border-gray-200">
+  </header>
+
+<!-- ====== HERO: Auto slider with next/prev + tag pill ====== -->
+<section class="relative overflow-hidden">
+    <div class="container mx-auto px-4 py-10">
+      <div class="relative bg-white rounded-2xl shadow-lg overflow-hidden">
+  
+        <!-- slides wrapper -->
+        <div id="hero-slider" class="relative w-full overflow-hidden rounded-2xl">
+          <div id="hero-track" class="slider-track flex transition-transform duration-500 ease-in-out">
+  
+            <!-- Slide 1 -->
+            <div class="w-full flex-shrink-0 relative aspect-[16/9] sm:aspect-[16/7] md:aspect-[16/6]">
+              <img src="/images/POSTER2.jpg" alt="Slide 1" class="w-full h-full object-cover rounded-2xl" />
+              <div class="absolute left-3 top-3 sm:left-6 sm:top-6 tag-pill rounded-full px-3 py-1 text-xs sm:text-sm font-medium shadow bg-white/80 text-gray-800">
+                Gift Card
+              </div>
+              <div class="absolute left-3 bottom-3 sm:left-6 sm:bottom-6 max-w-xs sm:max-w-sm md:max-w-md hero-slide-text">
+              </div>
+            </div>
+  
+            <!-- Slide 2 -->
+            <div class="w-full flex-shrink-0 relative aspect-[16/9] sm:aspect-[16/7] md:aspect-[16/6]">
+              <img src="/images/POSTER3.jpg" alt="Slide 2" class="w-full h-full object-cover rounded-2xl" />
+              <div class="absolute left-3 top-3 sm:left-6 sm:top-6 tag-pill rounded-full px-3 py-1 text-xs sm:text-sm font-medium shadow bg-white/80 text-gray-800">
+                Frames
+              </div>
+              <div class="absolute left-3 bottom-3 sm:left-6 sm:bottom-6 max-w-xs sm:max-w-sm md:max-w-md hero-slide-text">
+              </div>
+            </div>
+  
+            <!-- Slide 3 -->
+            <div class="w-full flex-shrink-0 relative aspect-[16/9] sm:aspect-[16/7] md:aspect-[16/6]">
+              <img src="/images/welcome.png" alt="Slide 3" class="w-full h-full object-cover rounded-2xl" />
+              <div class="absolute left-3 top-3 sm:left-6 sm:top-6 tag-pill rounded-full px-3 py-1 text-xs sm:text-sm font-medium shadow bg-white/80 text-gray-800">
+                Personalized
+              </div>
+              <div class="absolute left-3 bottom-3 sm:left-6 sm:bottom-6 max-w-xs sm:max-w-sm md:max-w-md hero-slide-text">
+   
+              </div>
+            </div>
+  
+          </div>
+        </div>
+  
+        <!-- controls -->
+        <div class="absolute inset-y-0 left-0 flex items-center pl-2 sm:pl-4">
+          <button id="hero-prev" class="backdrop-blur rounded-full p-2 shadow hover:scale-105 transition-transform">
+            <svg class="w-5 sm:w-6 h-5 sm:h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+          </button>
+        </div>
+        <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:pr-4">
+          <button id="hero-next" class="backdrop-blur rounded-full p-2 shadow hover:scale-105 transition-transform">
+            <svg class="w-5 sm:w-6 h-5 sm:h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+  
+        <!-- indicators -->
+        <div class="absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+          <button class="hero-dot w-2 sm:w-3 h-2 sm:h-3 rounded-full bg-white/60" data-index="0" aria-label="slide 1"></button>
+          <button class="hero-dot w-2 sm:w-3 h-2 sm:h-3 rounded-full bg-white/40" data-index="1" aria-label="slide 2"></button>
+          <button class="hero-dot w-2 sm:w-3 h-2 sm:h-3 rounded-full bg-white/40" data-index="2" aria-label="slide 3"></button>
+        </div>
+  
+      </div>
+    </div>
+  </section>
+  
+
+  <!-- ====== About Us ====== -->
+  <section id="about" class="bg-gradient-to-b from-white to-[var(--color-peach)] py-16">
+    <div class="container mx-auto px-4 grid md:grid-cols-2 gap-8 items-center">
+      
+      <!-- Left: Text Content -->
+      <div class="space-y-4">
+        <h3 class="text-3xl md:text-4xl font-bold hero-title">About Evoke Studios</h3>
+        <p class="text-gray-700 text-lg md:text-xl leading-relaxed">
+          Evoke Studios crafts thoughtful, handcrafted gifts — every piece tells a story. We partner with local artisans and use sustainable materials to bring you unique, memorable gifts for life's moments.
+        </p>
+        <ul class="mt-4 space-y-2 text-gray-700 list-none">
+          <li> Handpicked artisanal pieces</li>
+          <li> Personalized packaging</li>
+          <li> Eco-friendly and locally sourced</li>
+        </ul>
+      </div>
+      
+      <!-- Right: Image -->
+      <div class="flex justify-center md:justify-end">
+        <img src="/prod-image/hamper3.jpg" alt="About Evoke" class="rounded-xl shadow-lg w-64 sm:w-72 md:w-80 lg:w-96 object-cover" />
+      </div>
+      
+    </div>
+  </section>
+  
+
+  <div class="wave-container" style="background-color: var(--color-peach)">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 150">
+        <path fill="#fff" fill-opacity="1" 
+              d="M0,96L80,112C160,128,320,160,480,149.3C640,139,800,85,960,74.7C1120,64,1280,96,1360,112L1440,128L1440,150L1360,150C1280,150,1120,150,960,150C800,150,640,150,480,150C320,150,160,150,80,150L0,150Z">
+        </path>
+    </svg>
+</div>
+
+  <!-- ====== New Arrivals (grid + popup) ====== -->
+  <section id="new-arrivals" class="py-16">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-2xl font-semibold">New Arrivals</h3>
+        <p class="text-sm text-gray-500">Fresh picks — click any item to view details</p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <!-- card template  (repeat with different images/ids) -->
+        <div class="bg-white rounded-xl shadow p-3 cursor-pointer new-item" data-title=" Hampers" data-desc="A delicate hamper with scented candles, artisan soap and a handwritten tag." data-img="/prod-image/hampers9.jpg">
+          <div class="relative">
+            <img class="rounded-lg w-full h-44 object-cover" src="/prod-image/hampers9.jpg" alt="Rose Gift Hamper">
+            <div class="absolute left-3 top-3 tag-pill rounded-full px-2 py-1 text-xs">NEW</div>
+          </div>
+          <h4 class="mt-3 font-medium">Hamper</h4>
+          <p class="text-sm text-gray-500">Handpicked for a perfect moment.</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-3 cursor-pointer new-item" data-title="Personalized Mug Set" data-desc="A set of frames with custom packaging." data-img="/prod-image/frames6.jpg">
+          <img class="rounded-lg w-full h-44 object-cover" src="/prod-image/frames6.jpg" alt="Frames">
+          <h4 class="mt-3 font-medium">Frames</h4>
+          <p class="text-sm text-gray-500">Personalised frames</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-3 cursor-pointer new-item" data-title="Crafts" data-desc="Hand made curated crafts." data-img="prod-image/craft2.jpg">
+          <img class="rounded-lg w-full h-44 object-cover" src="/prod-image/craft2.jpg" alt="arts and crafts">
+          <h4 class="mt-3 font-medium">Craft Items</h4>
+          <p class="text-sm text-gray-500">Green gifts that last.</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-3 cursor-pointer new-item" data-title="Handmade Journal" data-desc="A Aesthetic set of white theme hampers" data-img="/prod-image/hampers2.webp">
+          <img class="rounded-lg w-full h-44 object-cover" src="/prod-image/hampers2.webp" alt="Journal">
+          <h4 class="mt-3 font-medium">Hamper</h4>
+          <p class="text-sm text-gray-500">Aesthetic white</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== Categories ====== -->
+  <section id="categories" class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-2xl font-semibold">Shop by Category</h3>
+        <p class="text-sm text-gray-500">Explore curated groups</p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <a href="#section1" class="group block rounded-xl overflow-hidden shadow hover:shadow-lg transition">
+          <div class="relative h-44">
+            <img src="/prod-image/hampers6.webp" alt="Hampers" class="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+            <div class="absolute left-4 bottom-4 text-white font-medium">Hampers</div>
+          </div>
+        </a>
+
+        <a href="#section2" class="group block rounded-xl overflow-hidden shadow hover:shadow-lg transition">
+          <div class="relative h-44">
+            <img src="/prod-image/frames7.jpg" alt="Frames" class="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+            <div class="absolute left-4 bottom-4 text-white font-medium">Frames</div>
+          </div>
+        </a>
+
+        <a href="#section3" class="group block rounded-xl overflow-hidden shadow hover:shadow-lg transition">
+          <div class="relative h-44">
+            <img src="/prod-image/craft1.webp" alt="Crafts" class="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+            <div class="absolute left-4 bottom-4 text-white font-medium">Crafts</div>
+          </div>
+        </a>
+
+        <a href="#section4" class="group block rounded-xl overflow-hidden shadow hover:shadow-lg transition">
+          <div class="relative h-44">
+            <img src="/prod-image/toys2.jpg" alt="Toys" class="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+            <div class="absolute left-4 bottom-4 text-white font-medium">Toys</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+<!-- ====== Four featured sections each with slider + popups ====== -->
+<section class="py-16 bg-gradient-to-b from-white to-[var(--color-peach)]">
+  <div class="container mx-auto px-4 space-y-12">
+    
+    <!-- ======= FEATURED SECTION TEMPLATE (used 4 times) ======= -->
+    <!-- HAMPERS -->
+    <div id="section1">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl font-semibold">Hampers</h3>
+      </div>
+
+      <div class="relative group">
+        <!-- Prev Button -->
+        <button class="feat-prev absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 p-2 md:p-2 p-1 rounded-full shadow block transition hover:scale-105">
+          <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+        </button>
+
+        <div class="overflow-hidden rounded-xl">
+          <div class="feat-track grid grid-flow-col auto-cols-[calc(100%/1.1)] md:auto-cols-[calc(25%)] gap-4 slider-track">
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Classic Hamper" data-desc="Curated snack and candle set." data-img="/prod-image/hampers1.webp">
+              <img src="/prod-image/hampers1.webp" class="rounded-lg w-full h-40 object-cover" alt="classic hampers">
+              <h4 class="mt-2 font-medium">Classic Hamper</h4>
+            </div>
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Luxury Hamper" data-desc="Premium chocolates, silk scarf & more." data-img="/prod-image/hampers2.webp">
+              <img src="/prod-image/hampers2.webp" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Luxury Hamper</h4>
+            </div>
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Eco Hamper" data-desc="Sustainable goods and plantable cards." data-img="prod-image/hamper3.jpg">
+              <img src="/prod-image/hamper3.jpg" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Eco Hamper</h4>
+            </div>
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Mini Celebration" data-desc="Cute treat box for small celebrations." data-img="/prod-image/Hampers4.jpg">
+              <img src="/prod-image/Hampers4.jpg" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Mini Celebration</h4>
+            </div>
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Eco Hamper" data-desc="Sustainable goods and plantable cards." data-img="/prod-image/Hampers5.webp">
+              <img src="/prod-image/Hampers5.webp" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Eco Hamper</h4>
+            </div>
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Eco Hamper" data-desc="Sustainable goods and plantable cards." data-img="/prod-image/hampers6.webp">
+              <img src="/prod-image/hampers6.webp" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Eco Hamper</h4>
+            </div>
+
+          
+          </div>
+        </div>
+
+        <!-- Next Button -->
+        <button class="feat-next absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 p-2 md:p-2 p-1 rounded-full shadow block transition hover:scale-105">
+          <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- FRAMES -->
+    <div id="section2">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl font-semibold">Frames</h3>
+      </div>
+
+      <div class="relative">
+        <button class="feat-prev absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 p-2 md:p-2 p-1 rounded-full shadow block transition hover:scale-105">
+          <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+        </button>
+
+        <div class="overflow-hidden rounded-xl">
+          <div class="feat-track grid grid-flow-col auto-cols-[calc(100%/1.1)] md:auto-cols-[calc(25%)] gap-4 slider-track">
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Candle Set" data-desc="Soy candles with subtle scents." data-img="/prod-image/frames1.webp">
+              <img src="/prod-image/frames1.webp" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Candle Set</h4>
+            </div>
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Wall Art" data-desc="Minimal prints with wooden frame." data-img="/prod-image/frames2.webp">
+              <img src="/prod-image/frames2.webp" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Wall Art</h4>
+            </div>
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Ceramic Vase" data-desc="Hand-glazed vases for table display." data-img="/prod-image/frames3.webp">
+              <img src="/prod-image/frames3.webp" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Ceramic Vase</h4>
+            </div>
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Throw Pillow" data-desc="Soft linen pillow with embroidery." data-img="/prod-image/frames4.webp">
+              <img src="/prod-image/frames4.webp" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Throw Pillow</h4>
+            </div>
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Throw Pillow" data-desc="Soft linen pillow with embroidery." data-img="/prod-image/frames5.jpg">
+              <img src="/prod-image/frames5.jpg" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Throw Pillow</h4>
+            </div>
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Throw Pillow" data-desc="Soft linen pillow with embroidery." data-img="/prod-image/frames6.jpg">
+              <img src="/prod-image/frames6.jpg" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Throw Pillow</h4>
+            </div>
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Throw Pillow" data-desc="Soft linen pillow with embroidery." data-img="/prod-image/frames7.jpg">
+              <img src="/prod-image/frames7.jpg" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Throw Pillow</h4>
+            </div>
+          </div>
+        </div>
+
+        <button class="feat-next absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 p-2 md:p-2 p-1 rounded-full shadow block transition hover:scale-105">
+          <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- CRAFT ITEMS -->
+    <div id="section3">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl font-semibold">Crafts</h3>
+      </div>
+
+      <div class="relative">
+        <button class="feat-prev absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 p-2 md:p-2 p-1 rounded-full shadow block transition hover:scale-105">
+          <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+        </button>
+
+        <div class="overflow-hidden rounded-xl">
+          <div class="feat-track grid grid-flow-col auto-cols-[calc(100%/1.1)] md:auto-cols-[calc(25%)] gap-4 slider-track">
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Name Necklace" data-desc="Custom name necklace in plated finish." data-img="/prod-image/craft1.webp">
+              <img src="/prod-image/craft1.webp" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Name Necklace</h4>
+            </div>
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Engraved Frame" data-desc="Wood frame with engraved message." data-img="/prod-image/craft2.jpg">
+              <img src="/prod-image/craft2.jpg" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Engraved Frame</h4>
+            </div>
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Custom Puzzle" data-desc="Photo-based puzzle for fun memories." data-img="/prod-image/craft3.jpg">
+              <img src="/prod-image/craft3.jpg" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Custom Puzzle</h4>
+            </div>
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Monogram Towels" data-desc="Soft towels with subtle monogram." data-img="/prod-image/crafts4.jpg">
+              <img src="/prod-image/crafts4.jpg" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Monogram Towels</h4>
+            </div>
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Monogram Towels" data-desc="Soft towels with subtle monogram." data-img="/prod-image/crafts5.jpg">
+              <img src="/prod-image/crafts5.jpg" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Monogram Towels</h4>
+            </div>
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Monogram Towels" data-desc="Soft towels with subtle monogram." data-img="/prod-image/craft3.jpg">
+              <img src="/prod-image/craft3.jpg" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Monogram Towels</h4>
+            </div>
+          </div>
+        </div>
+
+        <button class="feat-next absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 p-2 md:p-2 p-1 rounded-full shadow block transition hover:scale-105">
+          <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- TOYS -->
+    <div id="section4">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl font-semibold">Toys</h3>
+      </div>
+
+      <div class="relative">
+        <button class="feat-prev absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 p-2 md:p-2 p-1 rounded-full shadow block transition hover:scale-105">
+          <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+        </button>
+
+        <div class="overflow-hidden rounded-xl">
+          <div class="feat-track grid grid-flow-col auto-cols-[calc(100%/1.1)] md:auto-cols-[calc(25%)] gap-4 slider-track">
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Festival Hamper" data-desc="Bright and joyful festive hamper." data-img="/prod-image/toys1.jpg">
+              <img src="/prod-image/toys1.jpg" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Festival Hamper</h4>
+            </div>
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Diya Set" data-desc="Beautiful handcrafted diya set." data-img="/prod-image/toys2.jpg">
+              <img src="/prod-image/toys2.jpg" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Diya Set</h4>
+            </div>
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Bright Throws" data-desc="Colorful throws for home celebrations." data-img="/prod-image/toys3.jpg">
+              <img src="/prod-image/toys3.jpg" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Bright Throws</h4>
+            </div>
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Gifting Box" data-desc="Decorative box for gifting essentials." data-img="/prod-image/toys4.jpg">
+              <img src="/prod-image/toys4.jpg" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Gifting Box</h4>
+            </div>
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Gifting Box" data-desc="Decorative box for gifting essentials." data-img="/prod-image/toys5.jpg">
+              <img src="/prod-image/toys5.jpg" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Gifting Box</h4>
+            </div>
+            <div class="p-3 bg-white rounded-xl shadow cursor-pointer feat-item" data-title="Gifting Box" data-desc="Decorative box for gifting essentials." data-img="/prod-image/toys2.jpg">
+              <img src="/prod-image/toys2.jpg" class="rounded-lg w-full h-40 object-cover" alt="">
+              <h4 class="mt-2 font-medium">Gifting Box</h4>
+            </div>
+          </div>
+        </div>
+
+        <button class="feat-next absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 p-2 md:p-2 p-1 rounded-full shadow block transition hover:scale-105">
+          <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+  <!-- ====== Footer (kept) ====== -->
+  <footer class="bg-pink-100 text-gray-800 py-16 relative overflow-hidden scroll-animate-down">
+    <div class="absolute top-8 left-16 w-6 h-6 opacity-90">
+        <svg viewBox="0 0 100 100" class="w-full h-full">
+            <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#FF6B9D"/>
+        </svg>
+    </div>
+
+    <div class="absolute top-12 right-20 w-8 h-8 opacity-60">
+        <svg viewBox="0 0 100 100" class="w-full h-full">
+            <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#FFD93D"/>
+        </svg>
+    </div>
+
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+            <div class="lg:col-span-2">
+                <h3 class="text-3xl font-bold mb-6 text-gray-900">Evoke Studios</h3>
+                <p class="text-gray-700 mb-6 text-lg leading-relaxed">We're passionate about curating extraordinary gifts that tell your story and create lasting memories.</p>
+
+                <div class="mb-8">
+                <h4 class="text-lg font-semibold mb-3 text-pink-600">Why Choose Us</h4>
+                <ul class="space-y-2 text-gray-700 text-lg">
+                  <li>💖 Thoughtfully curated and handmade gifts</li>
+                  <li>🎁 Personalized packaging for every occasion</li>
+                  <li>🚚 Reliable and quick delivery</li>
+                  <li>🌿 Sustainable and locally crafted products</li>
+                </ul>
+                </div>
+
+                <div class="flex space-x-4">
+                    <a href="https://www.instagram.com/evoke_galleria" class="w-10 h-10 bg-pink-300 hover:bg-purple-600 rounded-full flex items-center justify-center transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
+                            <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/>
+                          </svg>
+                    </a>
+
+                    <a href="tel:+918301812911" class="w-10 h-10 bg-pink-300 hover:bg-green-600 rounded-full flex items-center justify-center transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M22 16.92v3a2.09 2.09 0 01-2.27 2.08A19.79 19.79 0 012 4.27 2.09 2.09 0 014.11 2h3a2.09 2.09 0 012.09 1.72 13.19 13.19 0 00.7 2.81 2.09 2.09 0 01-.47 2.3l-1.27 1.27a16 16 0 007.27 7.27l1.27-1.27a2.09 2.09 0 012.3-.47 13.19 13.19 0 002.81.7A2.09 2.09 0 0122 16.92z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-xl font-semibold mb-6 text-pink-600">Quick Links</h4>
+                <ul class="space-y-3">
+                    <li><a href="#about" class="text-gray-700 hover:text-pink-600 transition-colors flex items-center">
+                        <span class="w-2 h-2 bg-pink-500 rounded-full mr-3"></span>About Us</a></li>
+                    <li><a href="products.html" class="text-gray-700 hover:text-pink-600 transition-colors flex items-center">
+                        <span class="w-2 h-2 bg-pink-500 rounded-full mr-3"></span>Our Products</a></li>
+                    <li><a href="/products.html#contact" class="text-gray-700 hover:text-pink-600 transition-colors flex items-center">
+                        <span class="w-2 h-2 bg-pink-500 rounded-full mr-3"></span>Contact</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-xl font-semibold mb-6 text-pink-600">Contact Info</h4>
+                <ul class="space-y-5 text-gray-700">
+                    <li class="flex items-start">
+                        <span class="text-pink-500 mr-3 mt-1">📧</span>
+                        <div>
+                            <p class="font-medium">Email</p>
+                        <a href="mailto:evokestudio007@gmail.com" class="text-sm">   <p class="text-sm">evokestudio007@gmail.com</p> </a>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-pink-500 mr-3 mt-1">📞</span>
+                        <div>
+                            <p class="font-medium">Phone</p>
+                           <a href="tel:+918301812911" class="text-sm"> <p class="text-sm">91-830-1812-911</p> </a>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-pink-500 mr-3 mt-1">📍</span>
+                        <div>
+                         <a href="https://maps.app.goo.gl/9c1C6MXdVEhhv2KS8">   <p class="font-medium">Address</p>
+                            <p class="text-sm">Evoque Studio </p>
+                            <p class="text-sm">Joy City, JC 12345</p> </a>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-pink-500 mr-3 mt-1">🕒</span>
+                        <div>
+                            <p class="font-medium">Hours</p>
+                            <p class="text-sm">Mon-Fri: 9AM-6PM</p>
+                            <p class="text-sm">Sat-Sun: 10AM-4PM</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-300 pt-8 mt-6">
+            <div class="flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+                <p class="text-gray-600 mb-4 md:mb-0">&copy; 2024 Evoke Studios. All rights reserved. Made with ❤️ for extraordinary gifting.</p>
+                <div class="flex flex-wrap justify-center md:justify-end space-x-6 text-sm">
+                    <a href="#" class="text-gray-600 hover:text-pink-600 transition-colors">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </div>
+  </footer>
+
+
+  
+
+  <!-- ====== MODAL (for new arrivals & featured items) ====== -->
+  <div id="modal" class="fixed inset-0 hidden items-center justify-center z-50">
+    <div class="modal-backdrop absolute inset-0"></div>
+    <div class="relative bg-white w-11/12 max-w-2xl mx-auto rounded-xl shadow-lg z-10 overflow-hidden">
+      <button id="modal-close" class="absolute right-4 top-4 text-gray-600 hover:text-gray-900">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+
+      <div class="md:flex">
+        <img id="modal-img" src="" alt="" class="w-full md:w-1/2 h-64 object-cover">
+        <div class="p-6 md:w-1/2">
+          <h3 id="modal-title" class="text-xl font-semibold mb-2"></h3>
+          <p id="modal-desc" class="text-gray-600"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== WELCOME TOAST (bottom-right) ====== -->
+  <div id="welcome-toast" class="fixed bottom-6 right-6 bg-pink-200 rounded-lg p-3 shadow-lg toast-slide z-50 hidden">
+    <div class="flex items-center space-x-3">
+      <div class="text-2xl">👋</div>
+      <div>
+        <div class="font-medium">Welcome to Evoke Studio!</div>
+        <div class="text-sm text-gray-500">Discover curated treasures ✨</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SCRIPTS ====== -->
+  <script>
+    // Load FontAwesome (non-blocking)
+    (function(){
+      const fa = document.createElement('script');
+      fa.src = 'https://kit.fontawesome.com/a076d05399.js';
+      fa.crossOrigin = 'anonymous';
+      document.head.appendChild(fa);
+    })();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // ===== Mobile menu toggle =====
+      const toggleButton = document.getElementById('menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const menuIcon = document.getElementById('icon-menu');
+      const closeIcon = document.getElementById('icon-close');
+      if (toggleButton) toggleButton.addEventListener('click', () => {
+        const isHidden = mobileMenu.classList.contains('hidden');
+        mobileMenu.classList.toggle('hidden');
+        menuIcon.classList.toggle('hidden', !isHidden);
+        closeIcon.classList.toggle('hidden', isHidden);
+      });
+      window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768) {
+          mobileMenu.classList.add('hidden');
+          menuIcon.classList.remove('hidden');
+          closeIcon.classList.add('hidden');
+        }
+      });
+
+      // ===== HERO SLIDER =====
+      const heroTrack = document.getElementById('hero-track');
+      const heroSlides = heroTrack.children;
+      const heroDots = document.querySelectorAll('.hero-dot');
+      const heroPrev = document.getElementById('hero-prev');
+      const heroNext = document.getElementById('hero-next');
+      let heroIndex = 0, heroCount = heroSlides.length;
+      let heroAuto;
+
+      function updateHero() {
+        const width = document.getElementById('hero-slider').offsetWidth;
+        heroTrack.style.transform = `translateX(-${heroIndex * width}px)`;
+        heroDots.forEach((d,i) => d.classList.toggle('bg-white/60', i===heroIndex) );
+        heroDots.forEach((d,i) => d.classList.toggle('bg-white/40', i!==heroIndex) );
+      }
+
+      function heroNextFn() { heroIndex = (heroIndex + 1) % heroCount; updateHero(); }
+      function heroPrevFn() { heroIndex = (heroIndex - 1 + heroCount) % heroCount; updateHero(); }
+      heroNext.addEventListener('click', () => { heroNextFn(); resetHeroAuto(); });
+      heroPrev.addEventListener('click', () => { heroPrevFn(); resetHeroAuto(); });
+      heroDots.forEach(d => d.addEventListener('click', (e) => { heroIndex = Number(e.currentTarget.dataset.index); updateHero(); resetHeroAuto(); }));
+
+      function startHeroAuto() { heroAuto = setInterval(heroNextFn, 4500); }
+      function resetHeroAuto() { clearInterval(heroAuto); startHeroAuto(); }
+
+      // set sizes on resize
+      window.addEventListener('resize', updateHero);
+      // initialize
+      updateHero();
+      startHeroAuto();
+
+      // ===== WELCOME TOAST =====
+      const toast = document.getElementById('welcome-toast');
+      setTimeout(() => {
+        toast.classList.remove('hidden');
+        requestAnimationFrame(() => toast.classList.add('show'));
+        // hide after 4s
+        setTimeout(() => {
+          toast.classList.remove('show');
+          setTimeout(() => toast.classList.add('hidden'), 400);
+        }, 4000);
+      }, 500);
+
+      // ===== MODAL for New Arrivals & Featured items =====
+      const modal = document.getElementById('modal');
+      const modalImg = document.getElementById('modal-img');
+      const modalTitle = document.getElementById('modal-title');
+      const modalDesc = document.getElementById('modal-desc');
+      const modalClose = document.getElementById('modal-close');
+
+      function openModal(data) {
+        modalImg.src = data.img;
+        modalTitle.textContent = data.title;
+        modalDesc.textContent = data.desc;
+        modal.classList.remove('hidden');
+        // slight fade-in and focus trap
+        setTimeout(() => modal.classList.add('flex'), 10);
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+      }
+
+      // attach to new-arrivals
+      document.querySelectorAll('.new-item').forEach(el => {
+        el.addEventListener('click', () => {
+          openModal({
+            img: el.dataset.img,
+            title: el.dataset.title,
+            desc: el.dataset.desc
+          });
+        });
+      });
+
+      // attach to featured items
+      document.querySelectorAll('.feat-item').forEach(el => {
+        el.addEventListener('click', () => {
+          openModal({
+            img: el.dataset.img,
+            title: el.dataset.title,
+            desc: el.dataset.desc
+          });
+        });
+      });
+
+      modalClose.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal || e.target.classList.contains('modal-backdrop')) closeModal();
+      });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+      // ===== Featured sliders logic (left/right buttons) =====
+      document.querySelectorAll('.feat-prev').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const block = btn.parentElement;
+          const track = block.querySelector('.feat-track');
+          slideTrack(track, -1);
+        });
+      });
+      document.querySelectorAll('.feat-next').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const block = btn.parentElement;
+          const track = block.querySelector('.feat-track');
+          slideTrack(track, 1);
+        });
+      });
+
+      function slideTrack(track, dir) {
+        const card = track.querySelector('[data-title]');
+        if (!card) return;
+        const gap = parseFloat(getComputedStyle(track).gap || 0);
+        const cardWidth = track.children[0].getBoundingClientRect().width + gap;
+        const style = track.style.transform || 'translateX(0px)';
+        const m = style.match(/translateX\(-?([\d.]+)px\)/);
+        let current = m ? parseFloat(m[1]) : 0;
+        const maxScroll = Math.max(0, (track.children.length * cardWidth) - track.parentElement.clientWidth);
+        let next = current + (dir * cardWidth);
+        if (next < 0) next = 0;
+        if (next > maxScroll) next = maxScroll;
+        track.style.transform = `translateX(-${next}px)`;
+      }
+
+      // Add swipe support for mobile on each featured track
+      document.querySelectorAll('.feat-track').forEach(track => {
+        let startX = 0, currentX = 0, isDown = false;
+        track.addEventListener('touchstart', (e) => {
+          isDown = true; startX = e.touches[0].clientX; track.style.transition = 'none';
+        });
+        track.addEventListener('touchmove', (e) => {
+          if (!isDown) return;
+          currentX = e.touches[0].clientX;
+          const dx = startX - currentX;
+          const style = track.style.transform || 'translateX(0px)';
+          const m = style.match(/translateX\(-?([\d.]+)px\)/);
+          let current = m ? parseFloat(m[1]) : 0;
+          const next = Math.max(0, current + dx);
+          track.style.transform = `translateX(-${next}px)`;
+          startX = currentX;
+        });
+        track.addEventListener('touchend', () => { isDown = false; track.style.transition = ''; });
+      });
+
+      // Ensure hero sizing for smaller screens: set each slide width to slider width
+      function resizeHeroSlides() {
+        const container = document.getElementById('hero-slider');
+        const slideWidth = container.offsetWidth;
+        Array.from(heroSlides).forEach(s => s.style.width = slideWidth + 'px');
+        updateHero();
+      }
+
+
+
+      document.addEventListener('DOMContentLoaded', () => {
+            // RENAMED variables for clarity and to avoid conflicts
+            const carouselTrack = document.getElementById('carouselTrack');
+            const carouselDotsContainer = document.getElementById('carouselDots');
+            const slides = document.querySelectorAll('.slide');
+            const totalSlides = slides.length;
+            let currentSlide = 0;
+            const intervalTime = 5000; // Auto-advance every 5 seconds
+            let autoAdvanceInterval; // RENAMED from slideInterval
+
+            /**
+             * Updates the track position and dot indicator based on the currentSlide index.
+             */
+            const updateSlider = () => {
+                // Calculates the offset needed to show the current slide
+                const offset = -currentSlide * (100 / totalSlides);
+                carouselTrack.style.transform = `translateX(${offset}%)`; // Uses RENAMED carouselTrack
+                
+                // Update dots to show current slide
+                const dots = carouselDotsContainer.querySelectorAll('.indicator-dot'); // Uses RENAMED .indicator-dot class
+                dots.forEach((dot, index) => {
+                    dot.classList.remove('bg-white');
+                    dot.classList.add('bg-gray-500');
+                    if (index === currentSlide) {
+                        dot.classList.remove('bg-gray-500');
+                        dot.classList.add('bg-white');
+                    }
+                });
+            };
+
+            /**
+             * Advances the slider to the next slide, wrapping around.
+             */
+            const nextSlide = () => {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                updateSlider();
+                resetInterval();
+            };
+
+            /**
+             * Creates the navigation dots and attaches click handlers.
+             */
+            const createDots = () => {
+                slides.forEach((_, index) => {
+                    const dot = document.createElement('button');
+                    dot.classList.add('indicator-dot', 'w-3', 'h-3', 'rounded-full', 'bg-gray-500', 'transition', 'duration-300'); // RENAMED class to indicator-dot
+                    dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+                    dot.addEventListener('click', () => {
+                        currentSlide = index;
+                        updateSlider();
+                        resetInterval();
+                    });
+                    carouselDotsContainer.appendChild(dot); // Uses RENAMED carouselDotsContainer
+                });
+                updateSlider(); // Set initial active dot
+            };
+
+            /**
+             * Starts the auto-advance interval.
+             */
+            const startInterval = () => {
+                autoAdvanceInterval = setInterval(nextSlide, intervalTime); // Uses RENAMED autoAdvanceInterval
+            };
+
+            /**
+             * Clears and restarts the auto-advance interval.
+             */
+            const resetInterval = () => {
+                clearInterval(autoAdvanceInterval); // Uses RENAMED autoAdvanceInterval
+                startInterval();
+            };
+
+            // Initialization: Create dots and start auto-advance
+            createDots();
+            startInterval();
+        });
+
+        
+      resizeHeroSlides();
+      window.addEventListener('resize', resizeHeroSlides);
+
+    }); // DOMContentLoaded end
+
+const track = document.getElementById('hero-track');
+const slides = track.children;
+const nextBtn = document.getElementById('hero-next');
+const prevBtn = document.getElementById('hero-prev');
+const dots = document.querySelectorAll('.hero-dot');
+let current = 0;
+
+function updateSlider(index) {
+  track.style.transform = `translateX(-${index * 100}%)`;
+  dots.forEach((dot,i)=>dot.classList.toggle('bg-white/60', i===index));
+}
+
+nextBtn.addEventListener('click', ()=> {
+  current = (current + 1) % slides.length;
+  updateSlider(current);
+});
+
+prevBtn.addEventListener('click', ()=> {
+  current = (current - 1 + slides.length) % slides.length;
+  updateSlider(current);
+});
+
+// auto slide every 5s
+setInterval(()=> {
+  current = (current + 1) % slides.length;
+  updateSlider(current);
+},5000);
+
+// dot indicators
+dots.forEach(dot=>{
+  dot.addEventListener('click', ()=> {
+    current = parseInt(dot.dataset.index);
+    updateSlider(current);
+  });
+});
+
+    
+
+
+  </script>
+</body>
+</html>

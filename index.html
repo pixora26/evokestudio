@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVOKE-STUDIOS</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Playfair+Display:ital,wght@1,400&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <style>
+        :root {
+            --color-peach: #f9e2df; 
+            --color-blush: #e5b0a7;
+            --color-tan: #8C7860;
+            --color-text: #2D3748;
+            --font-serif: 'Playfair Display', serif;
+            --font-script: 'Dancing Script', cursive;
+            --font-sans: 'Inter', sans-serif;
+        }
+
+        @keyframes subtle-bg-pulse {
+            0% { background-color: var(--color-peach); }
+            50% { background-color: #fceceb; }
+            100% { background-color: var(--color-peach); }
+        }
+
+        @keyframes gentle-scale {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.01); }
+        }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInLeft {
+            0% { opacity: 0; transform: translateX(-30px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeInRight {
+            0% { opacity: 0; transform: translateX(30px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes scaleIn {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes slideInDown {
+            0% { opacity: 0; transform: translateY(-50px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.3) translateY(-50px); }
+            50% { opacity: 1; transform: scale(1.05) translateY(0); }
+            70% { transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes rotateIn {
+            0% { opacity: 0; transform: rotate(-180deg) scale(0.5); }
+            100% { opacity: 1; transform: rotate(0deg) scale(1); }
+        }
+
+        @keyframes flipInX {
+            0% { opacity: 0; transform: perspective(400px) rotateX(90deg); }
+            40% { transform: perspective(400px) rotateX(-20deg); }
+            60% { transform: perspective(400px) rotateX(10deg); }
+            80% { transform: perspective(400px) rotateX(-5deg); }
+            100% { opacity: 1; transform: perspective(400px) rotateX(0deg); }
+        }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--color-text);
+            background-color: #ffffff;
+        }
+        .header-top {
+            background-color: var(--color-blush);
+            color: var(--color-text);
+        }
+
+
+
+
+        .text-script { font-family: var(--font-script); font-weight: 400; }
+        .hero-title { font-family: var(--font-serif); font-weight: 700; }
+        .btn-tan {
+            background-color: var(--color-tan);
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 0.25rem;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+            transition: background-color 0.3s;
+        }
+        .btn-tan:hover { background-color: var(--color-blush); }
+
+        .welcome-box {
+            background: linear-gradient(135deg, var(--color-peach) 0%, rgba(255,255,255,0.8) 100%);
+            border: 1px solid var(--color-blush);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .welcome-box-doodle { position: absolute; opacity: 0.2; z-index: -1; }
+        .welcome-box-doodle.top-left { top: 10px; left: 10px; transform: rotate(-15deg); }
+        .welcome-box-doodle.bottom-right { bottom: 20px; right: 20px; transform: rotate(25deg); }
+
+        .star-pattern {
+            background-image: radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.5) 1px, transparent 0),
+                              radial-gradient(circle at 90% 90%, rgba(255, 255, 255, 0.5) 1px, transparent 0);
+            background-size: 200px 200px;
+            animation: gentle-scale 6s ease-in-out infinite alternate;
+        }
+        .wave-container { line-height: 0; }
+        .wave-container svg { display: block; width: 100%; }
+        .service-card { background-color: #ffffff; border: 1px solid #f0f0f0; }
+        #image-modal { opacity: 0; pointer-events: none; }
+        #image-modal:not(.hidden) { opacity: 1; pointer-events: auto; }
+        
+        .scroll-animate { opacity: 0; transform: translateY(30px); transition: all 0.6s ease-out; }
+        .scroll-animate.animate { opacity: 1; transform: translateY(0); }
+        .scroll-animate-left { opacity: 0; transform: translateX(-30px); transition: all 0.6s ease-out; }
+        .scroll-animate-left.animate { opacity: 1; transform: translateX(0); }
+        .scroll-animate-right { opacity: 0; transform: translateX(30px); transition: all 0.6s ease-out; }
+        .scroll-animate-right.animate { opacity: 1; transform: translateX(0); }
+        .scroll-animate-scale { opacity: 0; transform: scale(0.9); transition: all 0.6s ease-out; }
+        .scroll-animate-scale.animate { opacity: 1; transform: scale(1); }
+        .scroll-animate-down { opacity: 0; transform: translateY(-50px); transition: all 0.8s ease-out; }
+        .scroll-animate-down.animate { opacity: 1; transform: translateY(0); }
+        .scroll-animate-bounce { opacity: 0; transform: scale(0.3) translateY(-50px); transition: all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        .scroll-animate-bounce.animate { opacity: 1; transform: scale(1) translateY(0); }
+        .scroll-animate-rotate { opacity: 0; transform: rotate(-180deg) scale(0.5); transition: all 1s ease-out; }
+        .scroll-animate-rotate.animate { opacity: 1; transform: rotate(0deg) scale(1); }
+        .scroll-animate-flip { opacity: 0; transform: perspective(400px) rotateX(90deg); transition: all 1.2s ease-out; }
+        .scroll-animate-flip.animate { opacity: 1; transform: perspective(400px) rotateX(0deg); }
+        .scroll-animate-stagger { transition-delay: 0s; }
+        .scroll-animate-stagger:nth-child(1) { transition-delay: 0.1s; }
+        .scroll-animate-stagger:nth-child(2) { transition-delay: 0.2s; }
+        .scroll-animate-stagger:nth-child(3) { transition-delay: 0.3s; }
+        .scroll-animate-stagger:nth-child(4) { transition-delay: 0.4s; }
+    </style>
+</head>
+<body>
+
+<!-- Top Bar & Main Header -->
+<header class="relative bg-white shadow-sm border-b border-gray-200">
+    <!-- Decorative Doodles -->
+    <svg class="absolute top-0 left-0 w-20 h-20 text-indigo-100 opacity-60 hidden md:block" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="100" cy="100" r="90" stroke="currentColor" stroke-width="3" stroke-dasharray="5 5"/>
+        <path d="M100 10V190M10 100H190" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+
+    <svg class="absolute bottom-0 right-0 w-28 h-28 text-indigo-100 opacity-60 hidden md:block" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50 100C50 72.3858 72.3858 50 100 50C127.614 50 150 72.3858 150 100C150 127.614 127.614 150 100 150C72.3858 150 50 127.614 50 100Z" stroke="currentColor" stroke-width="5" stroke-dasharray="10 10"/>
+        <path d="M10 10L190 190M190 10L10 190" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+
+    <!-- Navigation -->
+    <nav class="container mx-auto px-4 py-6 flex items-center justify-between relative z-10">
+        <!-- Left: Desktop Nav Links -->
+        <div class="hidden md:flex md:items-center space-x-6">
+            <a href="index.html" class="nav-link text-gray-700 hover:text-indigo-600 transition-colors">Home</a>
+            <a href="products.html" class="nav-link text-gray-700 hover:text-indigo-600 transition-colors">Our Products</a>
+        </div>
+
+        <!-- Center: Logo -->
+        <div class="flex items-center justify-center relative w-full md:w-auto">
+            <div class="text-center">
+                <p class="text-xs tracking-widest uppercase text-gray-500">Curated Gifts & Treasures</p>
+                <h1 class="hero-title text-2xl font-bold tracking-tight text-gray-900">Evoke Studio</h1>
+            </div>
+
+            <!-- MOBILE TOGGLE BUTTON -->
+            <button id="menu-toggle" class="md:hidden absolute right-0 p-2 text-gray-700 hover:text-indigo-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200">
+                <svg id="icon-menu" class="w-6 h-6 block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+                <svg id="icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Right: Social Icons (Desktop Only) -->
+        <div class="hidden md:flex md:items-center space-x-4 text-lg text-gray-600">
+
+            <i class="fa-brands fa-pinterest hover:text-indigo-600 transition-colors cursor-pointer"></i>
+            <a href="#contact">
+                <button class="bg-transparent border border-gray-400 text-sm py-1 px-4 rounded-full hover:bg-gray-100 transition-colors text-gray-700">
+                    Contact Us
+                </button>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu (Hidden by Default) -->
+    <div id="mobile-menu" class="md:hidden hidden flex-col px-4 pb-4 space-y-2">
+        <a href="index.html" class="nav-link py-2 text-gray-700 hover:text-indigo-600 transition-colors block">Home</a>
+        <a href="products.html" class="nav-link py-2 text-gray-700 hover:text-indigo-600 transition-colors block">Our Products</a>
+        <div class="flex space-x-4 pt-2">
+            <i class="fa-brands fa-instagram hover:text-indigo-600 transition-colors cursor-pointer"></i>
+            <i class="fa-brands fa-facebook hover:text-indigo-600 transition-colors cursor-pointer"></i>
+            <i class="fa-brands fa-pinterest hover:text-indigo-600 transition-colors cursor-pointer"></i>
+        </div>
+        <div class="flex flex-col items-center space-y-3 mt-8 sm:mt-10 md:mt-16">
+            <a href="#contact">
+              <button class="w-32 bg-[#8b6b4f] text-white text-xs font-medium py-2 px-4 rounded-md hover:bg-[#a48265] transition-colors">
+                Contact Us
+              </button>
+            </a>
+          
+    </div>
+    <hr class="border-gray-200">
+</header>
+
+    <!-- Hero Section -->
+    <section class="hero-section min-h-screen pt-20 pb-25 relative overflow-hidden">
+
+        
+        <div class="absolute top-40 right-0 w-48 h-24 opacity-25">
+            <svg viewBox="0 0 300 120" preserveAspectRatio="none" class="w-full h-full">
+                <path d="M0,90 C75,30 150,90 225,60 C250,30 300,90 300,90 L300,120 L0,120 Z" fill="var(--color-peach)"></path>
+            </svg>
+        </div>
+        
+        
+
+        
+        <!-- Heart Shapes -->
+        <div class="absolute top-32 left-1/3 w-6 h-6 opacity-30">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#FF6B9D"/>
+            </svg>
+        </div>
+        
+        <div class="absolute bottom-40 right-1/4 w-8 h-8 opacity-40">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#FFD93D"/>
+            </svg>
+        </div>
+        
+        <div class="absolute top-1/2 right-8 w-7 h-7 opacity-35">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#00D4AA"/>
+            </svg>
+        </div>
+        
+        <div class="container mx-auto p-4 md:p-8 flex flex-col lg:flex-row items-center justify-between relative z-10">
+            
+            <div class="lg:w-1/2 p-4 text-center lg:text-left mb-10 lg:mb-0 scroll-animate-left">
+                <h2 class="text-xl md:text-3xl uppercase tracking-widest mb-4 leading-snug">
+                    Curated Crafts for
+                </h2>
+                <h1 class="text-4xl md:text-6xl hero-title leading-tight mb-2">
+                    Every Occasion
+                </h1>
+                <p class="text-script text-6xl text-center md:text-8xl mb-12" style="color: var(--color-tan);">
+                    Unique & Thoughtful
+                </p>
+                <a href="#contact" class="btn-tan shadow-lg hover:shadow-xl inline-block lg:hidden">
+                    Contact Us
+                </a>
+                <a href="https://maps.app.goo.gl/GCZGKDVPe5P7NPGW8" class="btn-tan shadow-lg hover:shadow-xl inline-block mt-4 lg:hidden" target="_blank">Visit Shop</a>
+
+                
+            </div>
+
+            <div class="lg:w-1/2 relative flex justify-center scroll-animate-right overflow-hidden rounded-xl shadow-2xl">
+                <div class="slider flex transition-transform duration-1000 ease-in-out" id="heroSlider">
+                    <img src="/images/POSTER1.jpg" 
+                         alt="Landscape 1" class="w-full flex-shrink-0">
+                    <img src="/images/POSTER2.jpg" 
+                         alt="Landscape 2" class="w-full flex-shrink-0">
+                    <img src="/images/POSTER3.jpg"
+                         alt="Landscape 3" class="w-full flex-shrink-0">
+                </div>
+            </div>
+    </section>
+
+    <div class="wave-container" style="background-color: #fffdf6;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 150">
+            <path fill="var(--color-peach)" fill-opacity="1" 
+                  d="M0,96L80,112C160,128,320,160,480,149.3C640,139,800,85,960,74.7C1120,64,1280,96,1360,112L1440,128L1440,150L1360,150C1280,150,1120,150,960,150C800,150,640,150,480,150C320,150,160,150,80,150L0,150Z">
+            </path>
+        </svg>
+    </div>
+    
+
+
+
+     <section class="py-16 text-center relative overflow-hidden scroll-animate" style="background-color: var(--color-peach);">
+        <div class="container mx-auto px-6">
+            <h3 class="text-4xl md:text-5xl uppercase tracking-widest font-light mb-4 scroll-animate-down">
+                Elevate Your Moments of Joy
+            </h3>
+            <p class="text-sm text-gray-600 mb-12 scroll-animate">Handcrafted Elegance for Every Celebration.</p>
+    
+            <div class="relative max-w-6xl mx-auto">
+                <div id="gifting-slider" class="overflow-hidden">
+                    <div class="flex transition-transform duration-500 ease-in-out" id="slider-track">
+    
+                        <!-- Slide 1 -->
+                        <div class="w-full flex-shrink-0 relative">
+                            <div class="bg-white/15 backdrop-blur-md rounded-3xl shadow-md border border-white/20 p-10 md:p-14">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+                                    <div class="text-left">
+                                        <h4 class="text-2xl md:text-3xl font-semibold mb-3" style="color: var(--color-tan);">
+                                            Hamper 
+                                        </h4>
+                                        <p class="text-gray-700 leading-relaxed">
+                                            At Evoke Studios, our hampers are more than just gifts — they’re experiences wrapped in elegance.
+                                             Each hamper is thoughtfully curated with handpicked treasures that reflect care, creativity, and celebration.
+                                        </p>
+                                    </div>
+                                    <div class="rounded-2xl overflow-hidden shadow-lg">
+                                        <img src="/images/elevate-slider1.jpg" alt="Birthday Gifts" class="w-full h-full object-cover">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Slide 2 -->
+                        <div class="w-full flex-shrink-0 relative">
+                            <div class="bg-white/15 backdrop-blur-md rounded-3xl shadow-md border border-white/20 p-10 md:p-14">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+                                    <div class="text-left">
+                                        <h4 class="text-2xl md:text-3xl font-semibold mb-3" style="color: var(--color-tan);">
+                                            Frames
+                                        </h4>
+                                        <p class="text-gray-700 leading-relaxed">
+                                            At Evoke Studios, our frames are more than just décor — they’re reflections of cherished memories captured in style. Each frame is thoughtfully designed with artistic detail and premium craftsmanship that reflect love, emotion, and timeless beauty.
+                                        </p>
+                                    </div>
+                                    <div class="rounded-2xl overflow-hidden shadow-lg">
+                                        <img src="/images/elevate-slider2.jpg" alt="Wedding Gifts" class="w-full h-full object-cover">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Slide 3 -->
+                        <div class="w-full flex-shrink-0 relative">
+                            <div class="bg-white/15 backdrop-blur-md rounded-3xl shadow-md border border-white/20 p-10 md:p-14">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+                                    <div class="text-left">
+                                        <h4 class="text-2xl md:text-3xl font-semibold mb-3" style="color: var(--color-tan);">
+                                            Craft Items
+                                        </h4>
+                                        <p class="text-gray-700 leading-relaxed">
+                                                At Evoke Studios, our craft items are more than just creations — they’re expressions of artistry and imagination. Each piece is thoughtfully handcrafted with precision and passion, reflecting creativity, elegance, and a touch of personal charm.
+                                        </p>
+                                    </div>
+                                    <div class="rounded-2xl overflow-hidden shadow-lg">
+                                        <img src="/images/elevate-slider3.jpg" alt="Holiday Gifts" class="w-full h-full object-cover">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Slide 4 -->
+                        <div class="w-full flex-shrink-0 relative">
+                            <div class="bg-white/15 backdrop-blur-md rounded-3xl shadow-md border border-white/20 p-10 md:p-14">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+                                    <div class="text-left">
+                                        <h4 class="text-2xl md:text-3xl font-semibold mb-3" style="color: var(--color-tan);">
+                                            Toys
+                                        </h4>
+                                        <p class="text-gray-700 leading-relaxed">
+                                            At Evoke Studios, our toys are more than just playthings — they’re sparks of joy and imagination. Each toy, from Hot Wheels to collectibles, is thoughtfully selected to inspire fun, creativity, and memorable moments for all ages.
+                                        </p>
+                                    </div>
+                                    <div class="rounded-2xl overflow-hidden shadow-lg">
+                                        <img src="/images/elevate-slider4.jpg" alt="Just Because Gifts" class="w-full h-full object-cover">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="wave-container" style="background-color: var(--color-peach);">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 150">
+            <path fill="#fff" fill-opacity="1" 
+                  d="M0,96L80,112C160,128,320,160,480,149.3C640,139,800,85,960,74.7C1120,64,1280,96,1360,112L1440,128L1440,150L1360,150C1280,150,1120,150,960,150C800,150,640,150,480,150C320,150,160,150,80,150L0,150Z">
+            </path>
+        </svg>
+    </div>
+
+
+    <section class="py-20 relative overflow-hidden" style="background-color: #ffffff;">
+        <!-- Decorative Wave Background -->
+        <div class="absolute top-0 left-0 w-full h-32 opacity-10">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="w-full h-full">
+                <path d="M0,60 C150,120 350,0 600,60 C850,120 1050,0 1200,60 L1200,120 L0,120 Z" fill="#ffffff"></path>
+            </svg>
+        </div>
+        
+        <div class="absolute bottom-0 right-0 w-full h-24 opacity-10">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="w-full h-full">
+                <path d="M0,60 C200,0 400,120 600,60 C800,0 1000,120 1200,60 L1200,120 L0,120 Z" fill="#ffffff"></path>
+            </svg>
+        </div>
+        
+        <div class="container mx-auto p-4 md:p-8 flex flex-col lg:flex-row items-start justify-between relative z-10">
+    
+            <!-- Text Section -->
+            <div class="lg:w-1/2 p-4 scroll-animate-right" id="about">
+                <div class="welcome-box p-8 md:p-12 rounded-lg shadow-xl relative">
+                    <!-- Top-left Doodle -->
+                    <svg class="welcome-box-doodle top-left w-24 h-24 text-gray-400" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 100C50 72.3858 72.3858 50 100 50C127.614 50 150 72.3858 150 100C150 127.614 127.614 150 100 150C72.3858 150 50 127.614 50 100Z" stroke="currentColor" stroke-width="5" stroke-dasharray="10 10"/>
+                        <path d="M10 10L190 190M190 10L10 190" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+        
+                    <!-- Bottom-right Doodle -->
+                    <svg class="welcome-box-doodle bottom-right w-28 h-28 text-gray-300" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="100" cy="100" r="90" stroke="currentColor" stroke-width="3" stroke-dasharray="5 5"/>
+                        <path d="M100 10V190M10 100H190" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+        
+                    <p class="text-script text-7xl mb-4" style="color: var(--color-tan);">
+                        Welcome
+                    </p>
+                    
+                    <h4 class="text-lg font-medium uppercase tracking-wider mb-2" style="color: var(--color-tan);">
+                        We're Evoke Studio
+                    </h4>
+                    
+                    <p class="text-sm leading-relaxed text-gray-600 mb-8">
+                        At Evoke Studios, our hampers are more than just gifts — they’re experiences wrapped in elegance. Each hamper is thoughtfully curated with handpicked treasures that reflect care, creativity, and celebration.
+                        <br><br>
+                        From luxury floral hampers and festive gift boxes to personalized arrangements, every piece is designed to express emotion in the most beautiful way. Whether it’s a birthday, wedding, festive occasion, or just a heartfelt gesture, our hampers are crafted to delight, surprise, and connect.
+                    </p>
+                </div>
+            </div>
+        
+            <!-- Image Section -->
+            <div class="lg:w-1/2 p-4 scroll-animate-left flex justify-center items-center">
+                <img src="/images/welcome.png" 
+                alt="Evoke Studio Hampers" 
+                class="rounded-xl shadow-lg object-cover w-full max-w-[460px]">
+                       </div>
+        
+        </div>
+        
+        </div>
+
+    </section>
+
+    <div class="wave-container" style="background-color: #ffffff;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 150">
+            <path fill="var(--color-peach)" fill-opacity="1" 
+                  d="M0,96L80,112C160,128,320,160,480,149.3C640,139,800,85,960,74.7C1120,64,1280,96,1360,112L1440,128L1440,150L1360,150C1280,150,1120,150,960,150C800,150,640,150,480,150C320,150,160,150,80,150L0,150Z">
+            </path>
+        </svg>
+    </div>
+
+    <section class="py-20 relative overflow-hidden" style="background-color: var(--color-peach);">
+        <!-- Decorative Wave Background -->
+        <div class="absolute top-0 left-0 w-full h-40 opacity-20">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="w-full h-full">
+                <path d="M0,30 C300,90 600,0 900,30 C1050,60 1200,0 1200,0 L1200,120 L0,120 Z" fill="var(--color-peach)"></path>
+            </svg>
+        </div>
+        
+        <div class="absolute bottom-0 right-0 w-full h-32 opacity-15">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="w-full h-full">
+                <path d="M0,90 C200,30 400,90 600,60 C800,30 1000,90 1200,60 L1200,120 L0,120 Z" fill="var(--color-peach)"></path>
+            </svg>
+        </div>
+        
+        <!-- Heart Shapes -->
+        <div class="absolute top-10 left-10 w-8 h-8 opacity-40">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#FF6B9D"/>
+            </svg>
+        </div>
+        
+        <div class="absolute top-20 right-20 w-12 h-12 opacity-30">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#FFD93D"/>
+            </svg>
+        </div>
+        
+        <div class="absolute bottom-20 left-1/4 w-10 h-10 opacity-35">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#00D4AA"/>
+            </svg>
+        </div>
+        
+        <div class="absolute bottom-32 right-1/3 w-6 h-6 opacity-40">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#FF6B9D"/>
+            </svg>
+        </div>
+        
+        <div class="absolute top-1/2 left-16 w-8 h-8 opacity-30">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#FFD93D"/>
+            </svg>
+        </div>
+
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <h2 class="text-xs uppercase tracking-widest font-medium mb-2" style="color: var(--color-tan);">
+                Find the Perfect Gift
+            </h2>
+            <h3 class="text-4xl md:text-5xl hero-title mb-12">
+                Our Offerings
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 scroll-animate">
+                <div class="service-card p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 scroll-animate-bounce scroll-animate-stagger">
+                    <p class="text-script text-6xl mb-4" style="color: var(--color-blush);">🎁</p>
+                    <h4 class="text-2xl font-bold mb-3">Hampers and Frames</h4>
+                    <p class="text-sm text-gray-600 mb-6">
+                        Curated hampers & frames—perfect for gifts and memories.
+                    </p>
+                </div>
+
+                <div class="service-card p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 scroll-animate-bounce scroll-animate-stagger">
+                    <p class="text-script text-6xl mb-4" style="color: var(--color-blush);">🧶</p>
+                    <h4 class="text-2xl font-bold mb-3">Crafts & Decor</h4>
+                    <p class="text-sm text-gray-600 mb-6">
+                        Curated crafts—spark imagination.
+                </div>
+
+                <div class="service-card p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 scroll-animate-bounce scroll-animate-stagger">
+                    <p class="text-script text-6xl mb-4" style="color: var(--color-blush);">🏎️</p>
+                    <h4 class="text-2xl font-bold mb-3">Toys</h4>
+                    <p class="text-sm text-gray-600 mb-6">
+                        Mini adventures—big smiles in every toy.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="wave-container" style="background-color: var(--color-peach);">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 150">
+            <path fill="#ffffff" fill-opacity="1" 
+                  d="M0,96L80,112C160,128,320,160,480,149.3C640,139,800,85,960,74.7C1120,64,1280,96,1360,112L1440,128L1440,150L1360,150C1280,150,1120,150,960,150C800,150,640,150,480,150C320,150,160,150,80,150L0,150Z">
+            </path>
+        </svg>
+    </div>
+
+    <section id="gallery-section" class="py-20 bg-white relative overflow-hidden">
+        <!-- Heart Shapes -->
+        <div class="absolute top-12 left-16 w-10 h-10 opacity-35">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#FF6B9D"/>
+            </svg>
+        </div>
+        
+        <div class="absolute top-24 right-12 w-8 h-8 opacity-40">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#00D4AA"/>
+            </svg>
+        </div>
+        
+        <div class="absolute bottom-16 left-8 w-12 h-12 opacity-30">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#FFD93D"/>
+            </svg>
+        </div>
+        
+        <div class="absolute bottom-32 right-20 w-6 h-6 opacity-45">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#FF6B9D"/>
+            </svg>
+        </div>
+        
+        <div class="absolute top-1/2 left-4 w-8 h-8 opacity-35">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#00D4AA"/>
+            </svg>
+        </div>
+
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <h2 class="text-xs uppercase tracking-widest font-medium mb-2" style="color: var(--color-tan);">
+                Shop Our Collection
+            </h2>
+            <h3 class="text-4xl md:text-5xl hero-title mb-12">
+                Evoke Studio's Gallery
+            </h3>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-6xl mx-auto scroll-animate-scale">
+                <div class="gallery-item cursor-pointer rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-[1.03] scroll-animate scroll-animate-stagger" data-image="https://placehold.co/800x600/F9E2DF/8C7860?text=Gift+1">
+                    <img src="/images/elevate-slider1.jpg" alt="Gift 1" class="w-full h-full object-cover">
+                </div>
+                <div class="gallery-item cursor-pointer rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-[1.03] scroll-animate scroll-animate-stagger" data-image="https://placehold.co/800x600/E5B0A7/FFFFFF?text=Gift+2">
+                    <img src="/images/elevate-slider2.jpg" alt="Gift 2" class="w-full h-full object-cover">
+                </div>
+                <div class="gallery-item cursor-pointer rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-[1.03] scroll-animate scroll-animate-stagger" data-image="https://placehold.co/800x600/8C7860/FFFFFF?text=Gift+3">
+                    <img src="/images/elevate-slider3.jpg" alt="Gift 3" class="w-full h-full object-cover">
+                </div>
+                <div class="gallery-item cursor-pointer rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-[1.03] scroll-animate scroll-animate-stagger" data-image="https://placehold.co/800x600/F9E2DF/8C7860?text=Gift+4">
+                    <img src="/images/elevate-slider4.jpg" alt="Gift 4" class="w-full h-full object-cover">
+                </div>
+            </div>
+
+            <a href="/products.html" class="btn-tan mt-12 shadow-lg hover:shadow-xl inline-block">View More Gifts</a>
+        </div>
+    </section>
+
+<!-- Testimonial Slider Section -->
+<section class="relative py-20 px-6 overflow-hidden" style="background-color: #f9e2df;">
+    <div class="max-w-5xl mx-auto text-center relative z-10">
+      <h2 class="text-4xl md:text-5xl font-bold mb-10 text-gray-800">What Our Clients Say</h2>
+  
+      <!-- Slider Container -->
+      <div class="relative overflow-hidden">
+        <div id="testimonial-slider" class="flex transition-transform duration-500 ease-in-out">
+          <!-- Testimonial Card 1 -->
+          <div class="min-w-full md:min-w-1/3 px-4">
+            <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 shadow-lg border border-white/30 hover:scale-[1.02] transition-all">
+              <p class="text-gray-800 text-lg italic mb-4">“Evoke Studios completely transformed our brand presence — clean design and fast delivery!”</p>
+              <div class="flex items-center justify-center space-x-4">
+                <div class="text-left">
+                  <span class="text-gray-900 font-semibold">— Arjun Menon</span>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Testimonial Card 2 -->
+          <div class="min-w-full md:min-w-1/3 px-4">
+            <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 shadow-lg border border-white/30 hover:scale-[1.02] transition-all">
+              <p class="text-gray-800 text-lg italic mb-4">“Super responsive team and an eye for detail — we loved collaborating with them!”</p>
+              <div class="flex items-center justify-center space-x-4">
+                <div class="text-left">
+                  <span class="text-gray-900 font-semibold">— Sara Khan</span>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Testimonial Card 3 -->
+          <div class="min-w-full md:min-w-1/3 px-4">
+            <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 shadow-lg border border-white/30 hover:scale-[1.02] transition-all">
+              <p class="text-gray-800 text-lg italic mb-4">“Professional, creative, and punctual. Highly recommended for any brand elevation work.”</p>
+              <div class="flex items-center justify-center space-x-4">
+                <div class="text-left">
+                  <span class="text-gray-900 font-semibold">— Rohan Das</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Navigation Buttons -->
+      <div class="flex justify-center mt-8 space-x-4">
+        <button id="prev" class="bg-gray-200 rounded-full p-2 hover:bg-gray-300 transition"></button>
+        <button id="next" class="bg-gray-200 rounded-full p-2 hover:bg-gray-300 transition"></button>
+      </div>
+    </div>
+  </section>
+
+    <div class="wave-container" style="background-color: var(--color-peach);">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 150">
+            <path fill="#fff" fill-opacity="1" 
+                  d="M0,96L80,112C160,128,320,160,480,149.3C640,139,800,85,960,74.7C1120,64,1280,96,1360,112L1440,128L1440,150L1360,150C1280,150,1120,150,960,150C800,150,640,150,480,150C320,150,160,150,80,150L0,150Z">
+            </path>
+        </svg>
+    </div>
+
+    <!-- Contact Section -->
+    <section class="py-20 bg-white relative overflow-hidden">
+        <!-- Decorative Wave Background -->
+        <div class="absolute top-0 left-0 w-full h-32 opacity-15">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="w-full h-full">
+                <path d="M0,30 C200,90 400,0 600,30 C800,60 1000,0 1200,30 L1200,120 L0,120 Z" fill="#ffffff"></path>
+            </svg>
+        </div>
+        
+        <div class="absolute bottom-0 right-0 w-full h-40 opacity-10">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="w-full h-full">
+                <path d="M0,90 C300,30 600,90 900,60 C1050,30 1200,90 1200,90 L1200,120 L0,120 Z" fill="#ffffff"></path>
+            </svg>
+        </div>
+        
+        <!-- Heart Shapes -->
+        <div class="absolute top-16 left-20 w-10 h-10 opacity-40">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#FFD93D"/>
+            </svg>
+        </div>
+        
+        <div class="absolute top-32 right-16 w-8 h-8 opacity-35">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#00D4AA"/>
+            </svg>
+        </div>
+        
+        <div class="absolute bottom-24 left-12 w-12 h-12 opacity-30">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#FF6B9D"/>
+            </svg>
+        </div>
+        
+        <div class="absolute bottom-40 right-24 w-6 h-6 opacity-45">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#FFD93D"/>
+            </svg>
+        </div>
+        
+        <div class="absolute top-1/3 left-8 w-8 h-8 opacity-40">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#00D4AA"/>
+            </svg>
+        </div>
+
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-xs uppercase tracking-widest font-medium mb-2 scroll-animate-down" style="color: var(--color-tan);">
+                    Get In Touch
+                </h2>
+                <h3 class="text-4xl md:text-5xl hero-title mb-4 scroll-animate">
+                    Contact Us
+                </h3>
+                <p class="text-sm text-gray-600 max-w-2xl mx-auto scroll-animate">
+                    Have questions about our products or need help with a custom order? We'd love to hear from you! Reach out to us and we'll get back to you within 24 hours.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto" id="contact">
+                <!-- Contact Form -->
+                <div class="scroll-animate-left">
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-lg">
+                        <h4 class="text-2xl font-bold mb-6" style="color: var(--color-tan);">Send us a Message</h4>
+                        <form class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                                    <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Your first name" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                                    <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Your last name" required>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <input type="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="your.email@example.com" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                                <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                    <option value="" disabled selected>Select a subject</option>
+                                    <option>General Inquiry</option>
+                                    <option>Custom Order</option>
+                                    <option>Product Question</option>
+                                    <option>Shipping & Returns</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                                <textarea rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Tell us how we can help you..." required></textarea>
+                            </div>
+                            <button type="submit" class="w-full btn-tan shadow-lg hover:shadow-xl transition-all duration-300">
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+
+                <!-- Contact Information -->
+                <div class="scroll-animate-right">
+                    <div class="space-y-8">
+                        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                                    <span class="text-xl" style="color: var(--color-blush);">📍</span>
+                                </div>
+                                <div>
+                                   <a href="https://maps.app.goo.gl/q8LK9AiQjckjwwLPA"> <h5 class="font-bold text-lg mb-2" style="color: var(--color-tan);">Visit Our Store</h5>
+                                    <p class="text-sm text-gray-600 mb-1">Evoke Studio</p>
+                                    <p class="text-sm text-gray-600 mb-1">Panoor, Kerala </p>
+                                    <p class="text-sm text-gray-600">670692</p> </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                                    <span class="text-xl" style="color: var(--color-blush);">📞</span>
+                                </div>
+                                <div>
+                                   <a href="tel:+918301812911"> <h5 class="font-bold text-lg mb-2" style="color: var(--color-tan);">Call Us</h5>
+                                    <p class="text-sm text-gray-600 mb-1">Phone: +91-830-1812-911</p>
+                                    <p class="text-xs text-gray-500">Mon-Sat: 9AM-PM EST</p> </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                                    <span class="text-xl" style="color: var(--color-blush);">✉️</span>
+                                </div>
+                                <div>
+                                  <a href="mailto:evokestudio007@gmail.com">  <h5 class="font-bold text-lg mb-2" style="color: var(--color-tan);">Email Us</h5>
+                                    <p class="text-sm text-gray-600 mb-1">evokestudio007@gmail.com</p>
+                                    <p class="text-xs text-gray-500">We respond within 24 hours</p> </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                                    <span class="text-xl" style="color: var(--color-blush);">🕒</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-lg mb-2" style="color: var(--color-tan);">Store Hours</h5>
+                                    <p class="text-sm text-gray-600 mb-1">Monday - Saturday: 9:00 AM - 9:00 PM</p>
+                                    <p class="text-sm text-gray-600 mb-1">Sunday: 9:00 PM - 7:00 PM</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="image-modal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 z-50 hidden transition-opacity duration-300">
+        <div class="relative max-w-3xl w-full max-h-full">
+            <button id="close-modal" class="absolute top-0 right-0 m-4 text-white text-4xl leading-none opacity-75 hover:opacity-100 transition-opacity focus:outline-none">
+                &times;
+            </button>
+            <img id="modal-image" src="" alt="Zoomed Image" class="w-full h-auto rounded-lg shadow-2xl">
+        </div>
+    </div>
+    
+    <footer class="bg-pink-100 text-gray-800 py-16 relative overflow-hidden scroll-animate-down">
+
+        <!-- Decorative Hearts -->
+        <div class="absolute top-8 left-16 w-6 h-6 opacity-90">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#FF6B9D"/>
+            </svg>
+        </div>
+    
+        <div class="absolute top-12 right-20 w-8 h-8 opacity-60">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <path d="M50,85 C50,85 20,60 20,35 C20,25 30,15 40,15 C45,15 50,20 50,20 C50,20 55,15 60,15 C70,15 80,25 80,35 C80,60 50,85 50,85 Z" fill="#FFD93D"/>
+            </svg>
+        </div>
+    
+        <!-- Content -->
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+    
+                <!-- Company Info -->
+                <div class="lg:col-span-2">
+                    <h3 class="text-3xl font-bold mb-6 text-gray-900">Evoke Studios</h3>
+                    <p class="text-gray-700 mb-6 text-lg leading-relaxed">
+                        We're passionate about curating extraordinary gifts that tell your story and create lasting memories.
+                        Every piece in our collection is carefully selected to bring joy and meaning to life's special moments.
+                    </p>
+    
+                    <!-- Newsletter -->
+                    <!-- Why Choose Us -->
+<div class="mb-8">
+    <h4 class="text-lg font-semibold mb-3 text-pink-600">Why Choose Us</h4>
+    <ul class="space-y-2 text-gray-700 text-lg">
+      <li>💖 Thoughtfully curated and handmade gifts</li>
+      <li>🎁 Personalized packaging for every occasion</li>
+      <li>🚚 Reliable and quick delivery</li>
+      <li>🌿 Sustainable and locally crafted products</li>
+    </ul>
+  </div>
+  
+    
+                    <!-- Social Icons -->
+                    <div class="flex space-x-4">
+                        <!-- Instagram -->
+                        <a href="https://www.instagram.com/evoke_galleria" class="w-10 h-10 bg-pink-300 hover:bg-purple-600 rounded-full flex items-center justify-center transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
+                                <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/>
+                              </svg>
+                        </a>
+    
+                        <!-- Phone -->
+                        <a href="tel:+918301812911" class="w-10 h-10 bg-pink-300 hover:bg-green-600 rounded-full flex items-center justify-center transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M22 16.92v3a2.09 2.09 0 01-2.27 2.08A19.79 19.79 0 012 4.27 
+                                    2.09 2.09 0 014.11 2h3a2.09 2.09 0 012.09 1.72 13.19 13.19 0 00.7 
+                                    2.81 2.09 2.09 0 01-.47 2.3l-1.27 1.27a16 16 0 007.27 7.27l1.27-1.27
+                                    a2.09 2.09 0 012.3-.47 13.19 13.19 0 002.81.7A2.09 2.09 0 0122 16.92z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+    
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-xl font-semibold mb-6 text-pink-600">Quick Links</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#about" class="text-gray-700 hover:text-pink-600 transition-colors flex items-center">
+                            <span class="w-2 h-2 bg-pink-500 rounded-full mr-3"></span>About Us</a></li>
+                        <li><a href="products.html" class="text-gray-700 hover:text-pink-600 transition-colors flex items-center">
+                            <span class="w-2 h-2 bg-pink-500 rounded-full mr-3"></span>Our Products</a></li>
+                        <li><a href="#contact" class="text-gray-700 hover:text-pink-600 transition-colors flex items-center">
+                            <span class="w-2 h-2 bg-pink-500 rounded-full mr-3"></span>Contact</a></li>
+                    </ul>
+                </div>
+    
+                <!-- Contact Info -->
+                <div>
+                    <h4 class="text-xl font-semibold mb-6 text-pink-600">Contact Info</h4>
+                    <ul class="space-y-5 text-gray-700">
+                        <li class="flex items-start">
+                            <span class="text-pink-500 mr-3 mt-1">📧</span>
+                            <div>
+                                <p class="font-medium">Email</p>
+                            <a href="mailto:evokestudio007@gmail.com" class="text-sm">   <p class="text-sm">evokestudio007@gmail.com</p> </a>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-pink-500 mr-3 mt-1">📞</span>
+                            <div>
+                                <p class="font-medium">Phone</p>
+                               <a href="tel:+918301812911" class="text-sm"> <p class="text-sm">91-830-1812-911</p> </a>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-pink-500 mr-3 mt-1">📍</span>
+                            <div>
+                             <a href="https://maps.app.goo.gl/9c1C6MXdVEhhv2KS8">   <p class="font-medium">Address</p>
+                                <p class="text-sm">Evoque Studio </p>
+                                <p class="text-sm">Joy City, JC 12345</p> </a>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-pink-500 mr-3 mt-1">🕒</span>
+                            <div>
+                                <p class="font-medium">Hours</p>
+                                <p class="text-sm">Mon-Fri: 9AM-6PM</p>
+                                <p class="text-sm">Sat-Sun: 10AM-4PM</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+    
+            <!-- Bottom Bar -->
+            <div class="border-t border-gray-300 pt-8 mt-6">
+                <div class="flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+                    <p class="text-gray-600 mb-4 md:mb-0">
+                        &copy; 2024 Evoke Studios. All rights reserved. Made with ❤️ for extraordinary gifting.
+                    </p>
+                    <div class="flex flex-wrap justify-center md:justify-end space-x-6 text-sm">
+                        <a href="#" class="text-gray-600 hover:text-pink-600 transition-colors">Sitemap</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="script.js"></script>
+    <script>
+// Load FontAwesome
+const faScript = document.createElement('script');
+faScript.src = 'https://kit.fontawesome.com/a076d05399.js';
+faScript.crossOrigin = 'anonymous';
+document.body.appendChild(faScript);
+
+document.addEventListener('DOMContentLoaded', () => {
+    // ===== Mobile Menu Toggle =====
+    const toggleButton = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = document.getElementById('icon-menu');
+    const closeIcon = document.getElementById('icon-close');
+
+    function toggleMenu() {
+        if (!mobileMenu || !menuIcon || !closeIcon) return;
+        mobileMenu.classList.toggle('hidden');
+        menuIcon.classList.toggle('hidden');
+        closeIcon.classList.toggle('hidden');
+    }
+
+    if (toggleButton) toggleButton.addEventListener('click', toggleMenu);
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768 && mobileMenu && !mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.add('hidden');
+            menuIcon.classList.remove('hidden');
+            closeIcon.classList.add('hidden');
+        }
+    });
+
+    // ===== Testimonial Slider =====
+    const slider = document.getElementById('testimonial-slider');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+
+    if (slider && prevBtn && nextBtn) {
+        let index = 0;
+
+        function updateSlider() {
+            const cardWidth = slider.children[0].offsetWidth;
+            slider.style.transform = `translateX(-${index * cardWidth}px)`;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            index = (index + 1) % slider.children.length;
+            updateSlider();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            index = (index - 1 + slider.children.length) % slider.children.length;
+            updateSlider();
+        });
+
+        // Auto-slide every 5 seconds
+        setInterval(() => {
+            index = (index + 1) % slider.children.length;
+            updateSlider();
+        }, 5000);
+
+        // Update slider on window resize
+        window.addEventListener('resize', updateSlider);
+    }
+});
+
+
+
+    </script>
+</body>
+</html>
